@@ -9,7 +9,7 @@ function parseSettings(raw) {
     }
 
     let rawDevices = raw.match(/\/dev\/video\d+/g)
-    let devices = rawDevices.forEach(d=>parseInt(d.replace('/dev/video','')))
+    let devices = rawDevices.map(d=>parseInt(d.replace('/dev/video','')))
 
     return devices
 }
