@@ -3,6 +3,7 @@ const express = require('express');
 const logger = require("morgan");
 const cors = require("cors");
 const bodyParser = require('body-parser');
+const createRoute = require('./lib/createControlRoute');
 
 const app = express();
 
@@ -20,22 +21,22 @@ app.use('/', index);
 const settings = require('./routes/settings');
 app.use('/settings', settings);
 
-const brightness = require('./routes/brightness');
+const brightness = createRoute('brightness', 30, 255);
 app.use('/brightness', brightness);
 
-const contrast = require('./routes/contrast');
+const contrast = createRoute('contrast', 0, 10);
 app.use('/contrast', contrast);
 
-const exposure_absolute = require('./routes/exposure_absolute');
+const exposure_absolute = createRoute('exposure_absolute', 5, 2000);
 app.use('/exposure_absolute', exposure_absolute);
 
-const exposure_auto = require('./routes/exposure_auto');
+const exposure_auto = createRoute('exposure_auto', 0, 3);
 app.use('/exposure_auto', exposure_auto);
 
-const saturation = require('./routes/saturation');
+const saturation = createRoute('saturation', 0, 200);
 app.use('/saturation', saturation);
 
-const sharpness = require('./routes/sharpness');
+const sharpness = createRoute('sharpness', 0, 50);
 app.use('/sharpness', sharpness);
 
 // error handler
