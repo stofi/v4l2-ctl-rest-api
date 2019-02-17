@@ -8,13 +8,16 @@ RESTful API to control USB camera settings via v4l2-ctl.
 4. `npm start`
 
 ## How to Use this API
-All endpoints follow the structure `GET /{setting}/{deviceId}` or `POST /{setting}/{deviceId}/{value}`. You can also get the maximum and minimum values of a setting via `GET /{setting}/max_value` or `GET /{setting}/min_value`.
+All endpoints follow the structure `GET /{deviceId}`, `GET /{deviceId}/{setting}` or `POST /{deviceId}/{setting}/{value}`. You can also get the maximum and minimum values of a devices setting via `GET /{deviceId}/{setting}/max_value` or `GET /{deviceId}/{setting}/min_value`.
+
+## Get a list of Devices
+You can get list of all available devices by using `GET /devices`. This returns a list of device ids as and array of integers.
 
 ## Currently Supported Setting Controls
-You can get the currently supported settings using `GET /settings`. This will return all of the supported settings as an array of strings.
+You can get the device supported settings using `GET GET /{deviceId}/settings`. This will return all of the supported settings for the device as an array of strings.
 
 ## Example
-If you have a USB device connected to `/dev/video0`, you can get its current brightness via `GET /brightness/0`, or set its brightness via `POST /brightness/0/130`.
+If you have a USB device connected to `/dev/video0`, you can get its current brightness via `GET /0/brightness`, or set its brightness via `POST /0/brightness/0/130`.
 
 ## Setting up v4l2-ctl-rest-api to Run on Boot
 ```

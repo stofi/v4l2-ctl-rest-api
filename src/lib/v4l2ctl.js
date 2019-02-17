@@ -1,5 +1,7 @@
 const execute = require("./execute");
 const getCtrlParser = require('./getCtrlParser');
+const getSettingsParser = require('./getSettingsParser');
+const getSettingsParser = require('./getDevicesParser');
 
 /**
  * Gets the specified control for the device.
@@ -24,7 +26,7 @@ function getControl(deviceId, control) {
 
 /**
  * Sets the specified control value for the device.
- * For example, to set the brightness for /dev/video0 
+ * For example, to set the brightness for /dev/video0
  * to 140, you would call: setControl(0, 'brightness', 140).
  * @param {number} deviceId the device number of the camera
  * @param {string} control the control name
@@ -48,5 +50,44 @@ function setControl(deviceId, control, value) {
     });
 }
 
+/**
+ * Get a list of settings available for the selected device.
+ * @param {number} deviceId the device number of the camera
+ * @returns array of avaible settings with min and max values
+ */
+function getSettings(deviceId) {
+    return new Promise((resolve, reject) => {
+        return execute(`v4l2-ctl -d /dev/video${deviceId} -l`)
+            .then(output => {
+                if(output.stderr) {
+                    return reject(data.stderr);
+                }
+
+                return resolve(getSettingsParser(output.stdout));
+            })
+            .catch(error => reject(error));
+    });
+}
+
+/**
+ * Get a list of available devices
+ * @returns array of avaible device ids
+ */
+function getDevices() {
+    return new Promise((resolve, reject) => {
+        return execute(`v4l2-ctl --list-devices`)
+            .then(output => {
+                if(output.stderr) {
+                    return reject(data.stderr);
+                }
+
+                return resolve(getDevicesParser(output.stdout));
+            })
+            .catch(error => reject(error));
+    });
+}
+
 module.exports.getControl = getControl;
 module.exports.setControl = setControl;
+module.exports.getSettings = getSettings;
+module.exports.getDevices = getDevices;
