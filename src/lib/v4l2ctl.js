@@ -1,7 +1,7 @@
 const execute = require("./execute");
 const getCtrlParser = require('./getCtrlParser');
 const getSettingsParser = require('./getSettingsParser');
-const getSettingsParser = require('./getDevicesParser');
+const getDevicesParser = require('./getDevicesParser');
 
 /**
  * Gets the specified control for the device.
