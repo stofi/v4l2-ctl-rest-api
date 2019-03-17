@@ -16,6 +16,7 @@ function parseLineHelper(rawLine) {
 
     return {
       'name': name,
+      'type': type,
       'min': min,
       'max': max
     }
@@ -31,13 +32,19 @@ function parseSettings(raw) {
         return null;
     }
 
-    var parsed = [];
-    var splitRaw = raw.split('\n');
-    for(var split of splitRaw) {
-        parsed.push(parseLineHelper(split));
-    }
+    let rawLines = raw.split('\n');
+    let parsed = rawLines.filter(line => line.match(':')!=null).map(parseLineHelper)
+    let settings = {}
 
-    return parsed
+    parsed.forEach(setting => {
+        settings[setting.name] = {
+            'type': setting.type,
+            'min': setting.min,
+            'max': setting.max
+        }
+    })
+
+    return settings
 }
 
 module.exports = parseSettings;

@@ -23,9 +23,27 @@ function generateRoutes() {
 
     router.get("/:deviceId", function(req, res) {
         let deviceId = req.params.deviceId;
+        v4l2ctl.getSettings(deviceId)
+            .then(settings => {
+                let settingKeys = Object.keys(settings)
+                let promises = settingKeys.map(
+                    setting => v4l2ctl.getControl(deviceId, setting)
+                )
+                return Promise.all(promises)
+            })
+            .then(devSettings => res.json(
+                devSettings.map(i => ({
+                    [i.setting]: i.value
+                }))
+            ))
+            .catch(error => res.status(500).json(error));
+    });
+
+    router.get("/:deviceId/settings", function(req, res) {
+        let deviceId = req.params.deviceId;
 
         v4l2ctl.getSettings(deviceId)
-            .then(setting => res.json(setting))
+            .then(devSettings => res.json(devSettings))
             .catch(error => res.status(500).json(error));
     });
 
@@ -44,7 +62,7 @@ function generateRoutes() {
         let value = parseInt(req.params.value);
 
         v4l2ctl.getSettings(deviceId)
-            .then(deviceSetting => normalizeValue(value, deviceSetting.min, deviceSetting.max))
+            .then(devSettings => normalizeValue(value, devSettings[setting].min, devSettings[setting].max))
             .then(normalValue => v4l2ctl.setControl(deviceId, setting, normalValue))
             .then(control => res.json(control))
             .catch(error => res.status(500).json(error));
@@ -56,8 +74,8 @@ function generateRoutes() {
         let setting = req.params.setting;
 
         v4l2ctl.getSettings(deviceId)
-          .then(deviceSetting => res.json({ max: deviceSetting.min }))
-          .catch(error => res.status(500).json(error));
+            .then(devSettings => res.json({ min: devSettings[setting].min }))
+            .catch(error => res.status(500).json(error));
     });
 
     router.get("/:deviceId/:setting/max_value", function(req, res) {
@@ -65,7 +83,7 @@ function generateRoutes() {
         let setting = req.params.setting;
 
         v4l2ctl.getSettings(deviceId)
-            .then(deviceSetting => res.json({ max: deviceSetting.max }))
+            .then(devSettings => res.json({ max: devSettings[setting].max }))
             .catch(error => res.status(500).json(error));
     });
 
