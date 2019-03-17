@@ -14,7 +14,7 @@ All endpoints follow the structure `GET /{deviceId}`, `GET /{deviceId}/{setting}
 You can get list of all available devices by using `GET /devices`. This returns a list of device ids as and array of integers.
 
 ## Currently Supported Setting Controls
-You can get the device supported settings using `GET GET /{deviceId}/settings`. This will return all of the supported settings for the device as an array of strings.
+You can get the device supported settings using `GET /{deviceId}/settings`. This will return all of the supported settings for the device as an array of strings.
 
 ## Example
 If you have a USB device connected to `/dev/video0`, you can get its current brightness via `GET /0/brightness`, or set its brightness via `POST /0/brightness/0/130`.
