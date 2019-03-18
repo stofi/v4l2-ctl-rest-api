@@ -44,8 +44,37 @@ function parseSettings(raw) {
         }
     })
 
-    let menus = parsed.filter(setting => setting.type == 'menu')
-    console.log(menus);
+    let menus = parsed.filter(setting => setting.type == 'menu').map(setting => setting.name)
+
+    menus.forEach(menu => {
+        let foundMenu = false
+        let foundValues = false
+        let values = rawLines
+            .filter( line => {
+                if (!foundMenu) {
+                    let isMenu = line.match(menu)
+                    foundMenu = !!isMenu
+                    return false
+                } else if(!foundValues){
+                    let isValue = line.match(/^\t/)
+                    foundValues = !isValue
+                    return isValue
+                }
+                return false
+            })
+            .map( value => value.replace(/\t/g,'') )
+            .map( value => {
+                let split = value.split(':')
+                let id = Number(split[0])
+                let label = split[1].replace(/^ /,'')
+                return {
+                  id, label
+                }
+            })
+
+        settings[menu].values = values
+    })
+
 
     return settings
 }
