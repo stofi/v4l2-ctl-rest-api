@@ -33,7 +33,7 @@ function parseSettings(raw) {
     }
 
     let rawLines = raw.split('\n');
-    let parsed = rawLines.filter(line => line.match(':')!=null && !line.match('/t') ).map(parseLineHelper)
+    let parsed = rawLines.filter(line => line.match(':')!=null && !line.match('\t') ).map(parseLineHelper)
     let settings = {}
 
     parsed.forEach(setting => {
