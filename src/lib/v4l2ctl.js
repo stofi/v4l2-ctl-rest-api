@@ -57,7 +57,7 @@ function setControl(deviceId, control, value) {
  */
 function getSettings(deviceId) {
     return new Promise((resolve, reject) => {
-        return execute(`v4l2-ctl -d /dev/video${deviceId} -l`)
+        return execute(`v4l2-ctl -d /dev/video${deviceId} -L`)
             .then(output => {
                 if(output.stderr) {
                     return reject(data.stderr);

@@ -23,7 +23,7 @@ function parseLineHelper(rawLine) {
 }
 
 /**
- * Parses the output for 'v4l2-ctl -d <device> -l'
+ * Parses the output for 'v4l2-ctl -d <device> -L'
  * @param {string} raw the raw output from running the command
  * @returns {Object[]} list of available controls with min and max values
  */
@@ -33,7 +33,7 @@ function parseSettings(raw) {
     }
 
     let rawLines = raw.split('\n');
-    let parsed = rawLines.filter(line => line.match(':')!=null).map(parseLineHelper)
+    let parsed = rawLines.filter(line => line.match(':')!=null && !line.match('/t') ).map(parseLineHelper)
     let settings = {}
 
     parsed.forEach(setting => {
@@ -43,6 +43,9 @@ function parseSettings(raw) {
             'max': setting.max
         }
     })
+
+    let menus = parsed.filter(setting => setting.type == 'menu')
+    console.log(menus);
 
     return settings
 }
